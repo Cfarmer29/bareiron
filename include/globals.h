@@ -12,12 +12,6 @@
   #define task_yield();
 #endif
 
-// iOS platform detection
-// For jailbroken iOS devices, we can compile with standard POSIX APIs
-#if defined(__APPLE__) && (defined(__arm__) || defined(__arm64__) || defined(__aarch64__))
-  #define IOS_PLATFORM
-#endif
-
 #define true 1
 #define false 0
 
@@ -87,7 +81,6 @@
 // When targeting ESP-IDF, LittleFS is used to manage flash reads and
 // writes. Flash is typically *very* slow and unreliable, which is why
 // this option is disabled by default when targeting ESP-IDF.
-// On iOS, world data is saved to the app's documents directory.
 #ifndef ESP_PLATFORM
   #define SYNC_WORLD_TO_DISK
 #endif
