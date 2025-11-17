@@ -2,6 +2,7 @@
 notchian
 bareiron
 bareiron.exe
+bareiron_ios
 src/registries.c
 include/registries.h
 *.bin

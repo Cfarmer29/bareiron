@@ -23,6 +23,12 @@ Before compiling, you'll need to dump registry data from a vanilla Minecraft ser
   - To compile a native 32-bit binary (compatible with Windows 95/98, but why would you ever want that), use the same steps above, except with `pacman -Sy mingw-w64-cross-gcc` and `./build.sh --9x`.
   - To compile a MSYS2-linked binary: install [MSYS2](https://www.msys2.org/), and open the "MSYS2 MSYS" shell. From there, install `gcc` (run `pacman -Sy gcc`), navigate to this project's directory and run `./build.sh`. 
   - To compile and run a Linux binary from Windows: install WSL, and from there install `gcc` and run `./build.sh` in this project's directory.
+- To compile for iOS (jailbroken iPhone 8, ARM64, iOS 16+):
+  - On macOS with Xcode: install Xcode and the iOS SDK, navigate to this project's directory and run `./build_ios.sh`.
+  - On Linux: install `clang` and run `./build_ios.sh` (produces a generic ARM64/Darwin binary).
+  - Transfer the resulting `bareiron_ios` binary to your jailbroken iPhone via SSH or file transfer tools.
+  - On the iPhone: make it executable with `chmod +x bareiron_ios` and run it. You may need to disable code signing restrictions.
+  - World data will be saved to `world.bin` in the current directory. For optimal performance, consider adjusting `VIEW_DISTANCE` and `TIME_BETWEEN_TICKS` in `include/globals.h` for mobile hardware.
 - To target an ESP variant, set up a PlatformIO project (select the ESP-IDF framework, **not Arduino**) and clone this repository on top of it. See **Configuration** below for further steps. For better performance, consider changing the clock speed and enabling compiler optimizations. If you don't know how to do this, there are plenty of resources online.
 
 ## Configuration
@@ -44,6 +50,15 @@ The simplest way to accomplish this is to set up LittleFS in PlatformIO and comm
 If using an SD card module or other virtual file system, you'll have to implement the filesystem setup routine on your own. The built-in serializer should still work though, as it uses POSIX filesystem calls.
 
 Alternatively, if you can't set up a file system, you can dump and upload world data over TCP. This can be enabled by uncommenting `DEV_ENABLE_BEEF_DUMPS` in `globals.h`. *Note: this system implements no security or authentication.* With this option enabled, anyone with access to the server can upload arbitrary world data.
+
+## iOS-specific notes (jailbroken devices)
+When running on a jailbroken iPhone or iPad:
+- **Code signing**: You may need to use `ldid` to sign the binary, or disable code signing enforcement with tools like AppSync Unified.
+- **Network permissions**: The server binds to all network interfaces on port 25565 by default. Make sure your firewall allows incoming connections.
+- **Performance**: iPhone 8 (A11 chip, 2GB RAM) should handle small player counts well. Consider reducing `VIEW_DISTANCE` to `1` or `2` and increasing `TIME_BETWEEN_TICKS` if experiencing performance issues.
+- **Battery**: Running a Minecraft server is CPU-intensive. Keep the device plugged in or monitor battery usage.
+- **Background execution**: Use tools like `disown`, `nohup`, or `screen`/`tmux` via SSH to keep the server running when disconnecting.
+- **File location**: World data (`world.bin`) is saved in the directory where you run the binary. For persistence, run from a location like `/var/mobile/bareiron/`.
 
 ## Contribution
 - Create issues and discuss with the maintainer(s) before making pull requests. Even for small changes.
