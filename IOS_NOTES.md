@@ -29,9 +29,9 @@ This macro is defined when:
 
 ## Compilation
 
-### On macOS with Xcode (Required)
+### On macOS with Xcode (Recommended)
 
-**Note**: iOS compilation requires macOS with Xcode. Cross-compilation from Linux is not supported because the iOS SDK (which contains necessary system headers) is only available on macOS.
+**Note**: iOS compilation with the official iOS SDK requires macOS with Xcode. This produces the most compatible binary.
 
 ```bash
 # Install Xcode command line tools if not already installed
@@ -43,13 +43,31 @@ xcode-select --install
 
 This will use the iOS SDK and produce a properly signed ARM64 binary.
 
-### Why not Linux?
+### Cross-compilation from Linux (Experimental)
 
-Cross-compilation from Linux to iOS is not feasible because:
+While the iOS SDK is only available on macOS, you can create a generic ARM64 binary on Linux that may work on jailbroken iOS devices:
+
+```bash
+# Install clang (if not already installed)
+sudo apt-get install clang
+
+# Build for ARM64
+./build_ios.sh
+# Answer 'y' when prompted about cross-compilation
+```
+
+**Limitations of Linux cross-compilation:**
 - The iOS SDK is proprietary and only available on macOS
-- System headers (stdio.h, stdlib.h, etc.) require iOS-specific implementations
-- Apple's frameworks and libraries are not available outside of the iOS SDK
-- Generic ARM64 binaries lack proper iOS system library linkage
+- Creates a generic ARM64 binary using standard libc, not iOS-specific implementations
+- May require additional code signing and entitlements on the device
+- System library compatibility is not guaranteed
+- Should work on jailbroken devices with proper signing (ldid -S)
+
+**When to use Linux cross-compilation:**
+- You don't have access to a Mac
+- You're targeting jailbroken devices with flexible code execution policies
+- You're willing to troubleshoot compatibility issues
+- You want to quickly test if the code compiles for ARM64
 
 ## Code Compatibility
 

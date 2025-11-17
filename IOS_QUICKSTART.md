@@ -14,9 +14,10 @@ This guide walks you through getting bareiron running on your jailbroken iPhone 
 ## Step 1: Build the Server
 
 ### Requirements:
-- **macOS with Xcode** (required - iOS cross-compilation from Linux is not supported)
+- **macOS with Xcode** (recommended for best compatibility)
+- **OR Linux with clang** (experimental cross-compilation, may require additional device setup)
 
-### Build Steps:
+### Build Steps (macOS):
 ```bash
 # Clone or download this repository
 git clone https://github.com/Cfarmer29/bareiron.git
@@ -32,9 +33,27 @@ xcode-select --install
 ./build_ios.sh
 ```
 
+### Build Steps (Linux - Experimental):
+```bash
+# Clone or download this repository
+git clone https://github.com/Cfarmer29/bareiron.git
+cd bareiron
+
+# Install clang if not already installed
+sudo apt-get update && sudo apt-get install clang
+
+# Generate registries (one-time setup)
+# Note: Requires Java 21+ and internet access to download Minecraft server JAR
+./extract_registries.sh
+
+# Build for ARM64 (cross-compile)
+./build_ios.sh
+# Answer 'y' when prompted about cross-compilation
+```
+
 You should now have a `bareiron_ios` binary.
 
-**Note**: If you're on Linux, iOS compilation is not possible due to iOS SDK requirements. See `IOS_NOTES.md` for technical details.
+**Note**: Linux cross-compilation creates a generic ARM64 binary that should work on jailbroken iOS devices with proper signing, but may have compatibility differences compared to an iOS SDK build. See `IOS_NOTES.md` for technical details.
 
 ## Step 2: Transfer to iPhone
 

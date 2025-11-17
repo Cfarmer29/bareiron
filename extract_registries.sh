@@ -35,13 +35,42 @@ prepare_notchian_dir() {
 
 dump_registries() {
   if [[ ! -f "$SERVER_JAR" ]]; then
-    echo "No server.jar found (looked for $SERVER_JAR)."
-	echo "Please download the 1.21.8 server.jar (e.g. from https://mcversions.net/download/1.21.8)"
-	echo "and place it in the \"notchian\" directory."
+    echo "=========================================="
+    echo "ERROR: No server.jar found"
+    echo "=========================================="
+    echo ""
+    echo "Expected location: $NOTCHIAN_DIR/$SERVER_JAR"
+    echo ""
+    echo "Download options:"
+    echo "  1. Official source (recommended):"
+    echo "     curl -Lo notchian/server.jar https://piston-data.mojang.com/v1/objects/6bce4ef400e4efaa63a13d5e6f6b500be969ef81/server.jar"
+    echo ""
+    echo "  2. Alternative mirrors:"
+    echo "     • https://mcversions.net/download/1.21.8"
+    echo "     • https://getbukkit.org/download/vanilla"
+    echo ""
+    echo "  3. Manual download:"
+    echo "     • Visit minecraft.net and download version 1.21.8"
+    echo "     • Place server.jar in the '$NOTCHIAN_DIR' directory"
+    echo ""
+    echo "After downloading, run this script again."
+    echo ""
     exit 1
   fi
 
+  echo "Extracting registries from Minecraft server..."
   java -DbundlerMainClass="net.minecraft.data.Main" -jar "$SERVER_JAR" --all
+  
+  if [[ $? -ne 0 ]]; then
+    echo ""
+    echo "ERROR: Failed to extract registries from server.jar"
+    echo "This could mean:"
+    echo "  • Corrupt or incorrect server.jar file"
+    echo "  • Insufficient Java version (need Java 21+)"
+    echo "  • Not enough disk space"
+    echo ""
+    exit 1
+  fi
 }
 
 detect_js_runtime() {

@@ -2,8 +2,35 @@
 
 # Check for registries before attempting to compile, prevents confusion
 if [ ! -f "include/registries.h" ]; then
-  echo "Error: 'include/registries.h' is missing."
-  echo "Please follow the 'Compilation' section of the README to generate it."
+  echo "=========================================="
+  echo "WARNING: 'include/registries.h' is missing"
+  echo "=========================================="
+  echo ""
+  echo "Registry files are required for a working server."
+  echo "To generate them:"
+  echo "  1. Download Minecraft 1.21.8 server.jar"
+  echo "  2. Run: ./extract_registries.sh"
+  echo ""
+  echo "Alternatively, you can:"
+  echo "  • Download pre-generated registries from a GitHub Actions artifact"
+  echo "  • Generate on another machine and copy the files"
+  echo ""
+  
+  if [[ -f "src/registries.c" ]]; then
+    echo "Found src/registries.c but include/registries.h is missing."
+    echo "Both files are required. Please regenerate registries."
+    exit 1
+  fi
+  
+  echo "Cannot proceed without registries."
+  echo "See README.md 'Compilation' section for details."
+  exit 1
+fi
+
+# Also check for registries.c
+if [ ! -f "src/registries.c" ]; then
+  echo "ERROR: 'src/registries.c' is missing."
+  echo "Please run ./extract_registries.sh to generate registry files."
   exit 1
 fi
 
