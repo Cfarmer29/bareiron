@@ -142,9 +142,13 @@ This produces `bareiron_ios` compiled with the iOS SDK for best compatibility.
 #### Option B: Cross-Compile from Linux (Experimental)
 
 ```bash
-# Install clang
+# Install cross-compilation tools
 sudo apt-get update
-sudo apt-get install clang
+sudo apt-get install gcc-aarch64-linux-gnu
+# OR: sudo apt-get install crossbuild-essential-arm64
+
+# Alternative: Use clang (may need additional setup)
+# sudo apt-get install clang
 
 # Generate registries (if not done already)
 ./extract_registries.sh
@@ -155,6 +159,8 @@ sudo apt-get install clang
 ```
 
 This produces a generic ARM64 binary that should work on jailbroken iOS devices.
+
+**Note:** The build script will attempt to use clang with ARM64 target. If you encounter linker errors, you may need to install the proper cross-compilation toolchain (gcc-aarch64-linux-gnu) or modify the script to use it.
 
 **Differences:**
 - macOS build: Uses iOS SDK, produces iOS-specific binary
@@ -258,7 +264,23 @@ curl -fsSL https://deno.land/install.sh | sh
 
 ### Cross-compilation issues on Linux for iOS
 
-**Issue:** Binary doesn't work on iOS device.
+**Issue 1: Build fails with linker errors**
+
+**Error message:** "unrecognised emulation mode: aarch64linux"
+
+**Cause:** System linker doesn't support ARM64 target.
+
+**Solution:**
+```bash
+# Install ARM64 cross-compilation toolchain
+sudo apt-get install gcc-aarch64-linux-gnu
+
+# Modify build_ios.sh to use gcc-aarch64-linux-gnu:
+# Change line: compiler="clang"
+# To: compiler="aarch64-linux-gnu-gcc"
+```
+
+**Issue 2: Binary doesn't work on iOS device**
 
 **Possible causes:**
 - Library compatibility issues
@@ -275,6 +297,11 @@ curl -fsSL https://deno.land/install.sh | sh
    ldid -S bareiron_ios
    # OR with entitlements:
    ldid -Sentitlements.xml bareiron_ios
+   ```
+5. Check that the binary is actually ARM64:
+   ```bash
+   file bareiron_ios
+   # Should show: "ELF 64-bit LSB executable, ARM aarch64"
    ```
 
 ## Performance Tuning

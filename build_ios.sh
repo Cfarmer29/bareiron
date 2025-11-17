@@ -112,11 +112,20 @@ echo "Building bareiron for iOS (iPhone 8, ARM64)..."
 rm -f bareiron_ios
 
 # Compile
+echo "Running: $compiler src/*.c $ios_flags -Iinclude -o bareiron_ios $ios_linker"
 $compiler src/*.c $ios_flags -Iinclude -o bareiron_ios $ios_linker
 
 if [ $? -eq 0 ]; then
   echo "Build successful! Binary: bareiron_ios"
   echo ""
+  
+  # Check what type of binary was created
+  if command -v file &> /dev/null; then
+    echo "Binary info:"
+    file bareiron_ios
+    echo ""
+  fi
+  
   echo "To install on jailbroken iPhone 8:"
   echo "1. Copy bareiron_ios to your device (via SSH, iFunBox, etc.)"
   echo "2. Move it to a location like /usr/local/bin/ or /var/mobile/"
@@ -124,9 +133,38 @@ if [ $? -eq 0 ]; then
   echo "4. Sign the binary: ldid -S bareiron_ios (if needed)"
   echo "5. Run it: ./bareiron_ios"
   echo ""
-  echo "Note: You may need to sign the binary or disable code signing"
-  echo "enforcement on your jailbroken device."
+  
+  if [[ "$CROSS_COMPILE" == "true" ]]; then
+    echo "Note: This is a generic ARM64 binary from cross-compilation."
+    echo "It may require additional setup or may not work on iOS."
+    echo "For best results, use macOS with Xcode to build."
+  else
+    echo "Note: You may need to sign the binary or disable code signing"
+    echo "enforcement on your jailbroken device."
+  fi
 else
+  echo ""
+  echo "=========================================="
   echo "Build failed!"
+  echo "=========================================="
+  
+  if [[ "$CROSS_COMPILE" == "true" ]]; then
+    echo ""
+    echo "Common issues with ARM64 cross-compilation:"
+    echo ""
+    echo "1. Missing cross-compilation toolchain:"
+    echo "   • Ubuntu/Debian: sudo apt-get install gcc-aarch64-linux-gnu"
+    echo "   • Or use: sudo apt-get install crossbuild-essential-arm64"
+    echo ""
+    echo "2. Linker doesn't support ARM64:"
+    echo "   • Try using gcc-aarch64-linux-gnu instead of clang"
+    echo "   • Or compile on macOS with Xcode for proper iOS SDK support"
+    echo ""
+    echo "3. Missing libraries or headers:"
+    echo "   • Some system libraries may not be available for ARM64"
+    echo ""
+    echo "Recommended: Build on macOS with Xcode for best compatibility."
+  fi
+  
   exit 1
 fi
