@@ -17,15 +17,25 @@ For microcontrollers, see the section on **compilation** below.
 ## Compilation
 Before compiling, you'll need to dump registry data from a vanilla Minecraft server. On Linux, this can be done automatically using the `extract_registries.sh` script. Otherwise, the manual process is as follows: create a folder called `notchian` here, and put a Minecraft server JAR in it. Then, follow [this guide](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Data_Generators) to dump all of the registries (use the _second_ command with the `--all` flag). Finally, run `build_registries.js` with either [bun](https://bun.sh/), [node](https://nodejs.org/en/download), or [deno](https://docs.deno.com/runtime/getting_started/installation/).
 
-- To compile on Linux, install `gcc` and run `./build.sh`.
+> [!TIP]
+> **Can't download the Minecraft server JAR?** If you're behind a firewall or don't have internet access, you can:
+> - Generate registries on another machine and copy `include/registries.h` and `src/registries.c` to your build environment
+> - Use a mirror site like [mcversions.net](https://mcversions.net/download/1.21.8) or [getbukkit.org](https://getbukkit.org/download/vanilla)
+> - See [BUILDING.md](BUILDING.md) for detailed troubleshooting and alternative methods
+
+- To compile on Linux, install `gcc` and run `./build.sh`. See [BUILDING.md](BUILDING.md) for detailed build instructions and troubleshooting.
 - For compiling on Windows, there are a few options:
   - To compile a native Windows binary: install [MSYS2](https://www.msys2.org/) and open the "MSYS2 MINGW64" shell. From there, run `pacman -Sy mingw-w64-x86_64-gcc`, navigate to this project's directory, and run `./build.sh`.
   - To compile a native 32-bit binary (compatible with Windows 95/98, but why would you ever want that), use the same steps above, except with `pacman -Sy mingw-w64-cross-gcc` and `./build.sh --9x`.
   - To compile a MSYS2-linked binary: install [MSYS2](https://www.msys2.org/), and open the "MSYS2 MSYS" shell. From there, install `gcc` (run `pacman -Sy gcc`), navigate to this project's directory and run `./build.sh`. 
   - To compile and run a Linux binary from Windows: install WSL, and from there install `gcc` and run `./build.sh` in this project's directory.
 - To compile for iOS (jailbroken iPhone 8, ARM64, iOS 16+):
-  - **Requirements**: macOS with Xcode and iOS SDK installed (cross-compilation from Linux is not supported due to iOS SDK requirements).
-  - On macOS: install Xcode, run `xcode-select --install` to install command line tools, navigate to this project's directory and run `./build_ios.sh`.
+  - **Recommended**: macOS with Xcode and iOS SDK installed for best compatibility.
+    - On macOS: install Xcode, run `xcode-select --install` to install command line tools, navigate to this project's directory and run `./build_ios.sh`.
+  - **Alternative**: Cross-compilation from Linux (experimental, may require additional setup on device):
+    - Install clang: `sudo apt-get install clang`
+    - Run `./build_ios.sh` and confirm when prompted
+    - The resulting binary is a generic ARM64 binary that should work on jailbroken iOS but may need additional signing/entitlements
   - Transfer the resulting `bareiron_ios` binary to your jailbroken iPhone via SSH or file transfer tools.
   - On the iPhone: make it executable with `chmod +x bareiron_ios`, sign it with `ldid -S bareiron_ios`, and run it. You may need to disable code signing restrictions.
   - World data will be saved to `world.bin` in the current directory. For optimal performance, consider adjusting `VIEW_DISTANCE` and `TIME_BETWEEN_TICKS` in `include/globals.h` for mobile hardware.
