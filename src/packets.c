@@ -153,11 +153,21 @@ int cs_pluginMessage (int client_fd) {
   readString(client_fd);
   if (recv_count == -1) return 1;
   printf("  Channel: \"%s\"\n", recv_buffer);
+  
+  // Handle known plugin channels
   if (strcmp((char *)recv_buffer, "minecraft:brand") == 0) {
     readString(client_fd);
     if (recv_count == -1) return 1;
     printf("  Brand: \"%s\"\n", recv_buffer);
+  } else {
+    // For unknown/unhandled channels (e.g., Fabric, Forge, or other mods),
+    // consume the data payload to prevent length discrepancies.
+    // This improves compatibility with modded clients.
+    ssize_t data_length = readLengthPrefixedData(client_fd);
+    if (data_length == -1) return 1;
+    printf("  Data length: %zd bytes (unhandled channel)\n", data_length);
   }
+  
   printf("\n");
   return 0;
 }

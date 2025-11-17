@@ -7,29 +7,23 @@ This guide walks you through getting bareiron running on your jailbroken iPhone 
 
 - Jailbroken iPhone 8 running iOS 16
 - SSH access to your iPhone (install OpenSSH from Cydia/Sileo)
-- macOS or Linux computer for building (or use pre-built binary if available)
+- **macOS computer with Xcode** for building (or use pre-built binary if available)
 - Same WiFi network for initial setup
+- Optional: `ldid` tool for code signing (can be installed on iPhone via Cydia/Sileo)
 
 ## Step 1: Build the Server
 
-### On macOS (recommended):
+### Requirements:
+- **macOS with Xcode** (required - iOS cross-compilation from Linux is not supported)
+
+### Build Steps:
 ```bash
 # Clone or download this repository
 git clone https://github.com/Cfarmer29/bareiron.git
 cd bareiron
 
-# Generate registries (one-time setup)
-./extract_registries.sh
-
-# Build for iOS
-./build_ios.sh
-```
-
-### On Linux:
-```bash
-# Clone or download this repository
-git clone https://github.com/Cfarmer29/bareiron.git
-cd bareiron
+# Install Xcode command line tools (if not already installed)
+xcode-select --install
 
 # Generate registries (one-time setup)
 ./extract_registries.sh
@@ -39,6 +33,8 @@ cd bareiron
 ```
 
 You should now have a `bareiron_ios` binary.
+
+**Note**: If you're on Linux, iOS compilation is not possible due to iOS SDK requirements. See `IOS_NOTES.md` for technical details.
 
 ## Step 2: Transfer to iPhone
 
