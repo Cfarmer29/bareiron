@@ -20,10 +20,10 @@ Before compiling, you'll need to dump registry data from a vanilla Minecraft ser
 > [!TIP]
 > **Can't download the Minecraft server JAR?** If you're behind a firewall or don't have internet access, you can:
 > - Generate registries on another machine and copy `include/registries.h` and `src/registries.c` to your build environment
-> - Download pre-generated registry files from GitHub Actions artifacts (look for successful workflow runs)
 > - Use a mirror site like [mcversions.net](https://mcversions.net/download/1.21.8) or [getbukkit.org](https://getbukkit.org/download/vanilla)
+> - See [BUILDING.md](BUILDING.md) for detailed troubleshooting and alternative methods
 
-- To compile on Linux, install `gcc` and run `./build.sh`.
+- To compile on Linux, install `gcc` and run `./build.sh`. See [BUILDING.md](BUILDING.md) for detailed build instructions and troubleshooting.
 - For compiling on Windows, there are a few options:
   - To compile a native Windows binary: install [MSYS2](https://www.msys2.org/) and open the "MSYS2 MINGW64" shell. From there, run `pacman -Sy mingw-w64-x86_64-gcc`, navigate to this project's directory, and run `./build.sh`.
   - To compile a native 32-bit binary (compatible with Windows 95/98, but why would you ever want that), use the same steps above, except with `pacman -Sy mingw-w64-cross-gcc` and `./build.sh --9x`.
