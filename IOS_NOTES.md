@@ -29,21 +29,27 @@ This macro is defined when:
 
 ## Compilation
 
-### On macOS with Xcode
+### On macOS with Xcode (Required)
+
+**Note**: iOS compilation requires macOS with Xcode. Cross-compilation from Linux is not supported because the iOS SDK (which contains necessary system headers) is only available on macOS.
 
 ```bash
+# Install Xcode command line tools if not already installed
+xcode-select --install
+
+# Build for iOS
 ./build_ios.sh
 ```
 
 This will use the iOS SDK and produce a properly signed ARM64 binary.
 
-### On Linux
+### Why not Linux?
 
-```bash
-./build_ios.sh
-```
-
-This produces a generic ARM64/Darwin binary using clang's cross-compilation capabilities. The binary may require signing on the device.
+Cross-compilation from Linux to iOS is not feasible because:
+- The iOS SDK is proprietary and only available on macOS
+- System headers (stdio.h, stdlib.h, etc.) require iOS-specific implementations
+- Apple's frameworks and libraries are not available outside of the iOS SDK
+- Generic ARM64 binaries lack proper iOS system library linkage
 
 ## Code Compatibility
 

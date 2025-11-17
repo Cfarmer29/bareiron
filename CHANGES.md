@@ -1,3 +1,26 @@
+# Changelog
+
+## Latest Updates (Fabric Support & iOS Build Fixes)
+
+### iOS Build Script Improvements
+- **Fixed**: iOS cross-compilation from Linux now properly fails with clear error messages
+- **Changed**: `build_ios.sh` now requires macOS with Xcode (as intended)
+- **Improved**: Better error messages explaining why iOS SDK is required
+- **Added**: Alternative suggestions for users attempting to build from Linux
+
+### Fabric Client Support
+- **Added**: Full support for Fabric modded clients
+- **Fixed**: Plugin message handler now properly consumes data for all plugin channels
+- **Improved**: Better compatibility with modded clients (Fabric, Forge, etc.)
+- **Changed**: README updated to reflect Fabric support instead of warning against it
+
+### Documentation Updates
+- **Updated**: README.md compilation section with accurate iOS requirements
+- **Updated**: IOS_NOTES.md with clarifications about cross-compilation limitations
+- **Improved**: Build script error messages and user guidance
+
+---
+
 # iOS Support Changes Summary
 
 This document summarizes the changes made to add iOS 16 support for jailbroken iPhone 8 (ARM64).

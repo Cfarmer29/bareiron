@@ -6,8 +6,8 @@ The goal of this project is to enable hosting Minecraft servers on very weak dev
 - Minecraft version: `1.21.8`
 - Protocol version: `772`
 
-> [!WARNING]
-> Currently, only the vanilla client is officially supported. Issues have been reported when using Fabric or similar.
+> [!NOTE]
+> The server now supports both vanilla and Fabric clients. Fabric mod plugin messages are properly handled to ensure compatibility.
 
 ## Quick start
 For PC x86_64 platforms, grab the [latest build binary](https://github.com/p2r3/bareiron/releases/download/latest/bareiron.exe) and run it. The file is a [Cosmopolitan polyglot](https://github.com/jart/cosmopolitan), which means it'll run on Windows, Linux, and possibly Mac, despite the file extension. Note that the server's default settings cannot be reconfigured without compiling from source.
@@ -24,10 +24,10 @@ Before compiling, you'll need to dump registry data from a vanilla Minecraft ser
   - To compile a MSYS2-linked binary: install [MSYS2](https://www.msys2.org/), and open the "MSYS2 MSYS" shell. From there, install `gcc` (run `pacman -Sy gcc`), navigate to this project's directory and run `./build.sh`. 
   - To compile and run a Linux binary from Windows: install WSL, and from there install `gcc` and run `./build.sh` in this project's directory.
 - To compile for iOS (jailbroken iPhone 8, ARM64, iOS 16+):
-  - On macOS with Xcode: install Xcode and the iOS SDK, navigate to this project's directory and run `./build_ios.sh`.
-  - On Linux: install `clang` and run `./build_ios.sh` (produces a generic ARM64/Darwin binary).
+  - **Requirements**: macOS with Xcode and iOS SDK installed (cross-compilation from Linux is not supported due to iOS SDK requirements).
+  - On macOS: install Xcode, run `xcode-select --install` to install command line tools, navigate to this project's directory and run `./build_ios.sh`.
   - Transfer the resulting `bareiron_ios` binary to your jailbroken iPhone via SSH or file transfer tools.
-  - On the iPhone: make it executable with `chmod +x bareiron_ios` and run it. You may need to disable code signing restrictions.
+  - On the iPhone: make it executable with `chmod +x bareiron_ios`, sign it with `ldid -S bareiron_ios`, and run it. You may need to disable code signing restrictions.
   - World data will be saved to `world.bin` in the current directory. For optimal performance, consider adjusting `VIEW_DISTANCE` and `TIME_BETWEEN_TICKS` in `include/globals.h` for mobile hardware.
 - To target an ESP variant, set up a PlatformIO project (select the ESP-IDF framework, **not Arduino**) and clone this repository on top of it. See **Configuration** below for further steps. For better performance, consider changing the clock speed and enabling compiler optimizations. If you don't know how to do this, there are plenty of resources online.
 
